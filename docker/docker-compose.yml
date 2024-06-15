@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  dev:
+    container_name: "dev"
+    image: "${PROJECT_NAME}-dev:latest"
+    ports:
+      - "8080:8080"
+    environment:
+      NETWORK: ${NETWORK}
+      ADDR: ${ADDR}
+      SK: ${SK}
+      CONTRACT_ADDR: ${CONTRACT_ADDR}
+    depends_on:
+      - ganache
+    volumes:
+      - ".:/api"
+    networks:
+      - local-network
+
+  solc:
+    container_name: "solc"
+    image: "ethereum/solc:0.8.26-alpine"
+    working_dir: "/app"
+    entrypoint: [ ]
+    volumes:
+      - ".:/app"
+    networks:
+      - local-network
+
+  ganache:
+    container_name: "ganache"
+    image: "trufflesuite/ganache:v7.9.2"
+    ports:
+      - "8545:8545"
+    networks:
+      - local-network
+
+networks:
+  local-network:
